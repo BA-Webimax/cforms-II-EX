@@ -14,18 +14,18 @@
 	____HISTORY.txt
 
 
-Plugin Name: cforms
-Plugin URI: http://www.deliciousdays.com/cforms-plugin
+Plugin Name: cforms II EX
+Plugin URI: https://github.com/msigley/cforms-II-EX
 Description: cformsII offers unparalleled flexibility in deploying contact forms across your blog. Features include: comprehensive SPAM protection, Ajax support, Backup & Restore, Multi-Recipients, Role Manager support, Database tracking and many more. Please see ____HISTORY.txt for <strong>what's new</strong> and current <strong>bugfixes</strong>.
-Author: Oliver Seidel
-Version: 14.6
-Author URI: http://www.deliciousdays.com
+Author: Matthew Sigley, Oliver Seidel
+Version: 14.6.1
+Author URI: https://github.com/msigley/
 
 
 */
 
 global $localversion;
-$localversion = '14.6';
+$localversion = '14.6.1';
 
 ### debug messages
 $cfdebug = false;
