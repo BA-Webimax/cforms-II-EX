@@ -95,7 +95,16 @@ require_once (dirname(__FILE__) . '/lib_editor.php');
 ### http://trac.wordpress.org/ticket/3002
 $plugindir   = $cformsSettings['global']['plugindir'];
 $cforms_root = $cformsSettings['global']['cforms_root'];
-
+//Correct protocol for https connections
+list($protocol, $uri) = explode('://', $cforms_root, 2);
+if( is_ssl() ) {
+	if( 'http' == $protocol )
+		$protocol = 'https';
+} else {
+	if( 'https' == $protocol )
+		$protocol = 'http';
+}
+$cforms_root = $protocol.'://'.$uri;
 
 
 ### session control for multi-page form
