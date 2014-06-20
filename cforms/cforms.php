@@ -1462,6 +1462,9 @@ function widget_cforms_init() {
 	global $cforms_root, $wp_registered_widgets, $cformsSettings;
 
     $cformsSettings = get_option('cforms_settings');
+    $options = array();
+	if( isset($cformsSettings['global']['widgets']) && is_array($cformsSettings['global']['widgets']) )
+		$options = $cformsSettings['global']['widgets'];
     $options = $cformsSettings['global']['widgets'];
     $prefix = 'cforms';
 
