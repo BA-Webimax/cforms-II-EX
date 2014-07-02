@@ -18,7 +18,7 @@ Plugin Name: cforms II EX
 Plugin URI: https://github.com/msigley/cforms-II-EX
 Description: cformsII offers unparalleled flexibility in deploying contact forms across your blog. Features include: comprehensive SPAM protection, Ajax support, Backup & Restore, Multi-Recipients, Role Manager support, Database tracking and many more. Please see ____HISTORY.txt for <strong>what's new</strong> and current <strong>bugfixes</strong>.
 Author: Matthew Sigley, Oliver Seidel
-Version: 14.6.1
+Version: 14.6.2
 Author URI: https://github.com/msigley/
 
 
