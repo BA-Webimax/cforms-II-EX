@@ -97,7 +97,7 @@ function cf_sanitize_ids($t) {
 
 	$t = str_replace('[', '', $t);
 	$t = str_replace(']', '', $t);
- 
+
 	return $t;
 }
 
@@ -138,7 +138,7 @@ function formatEmail($track,$no){
     foreach( array_keys($track) as $k){
 
 		$v = stripslashes($track[$k]);
-		
+
 		### Exclude empty fields?
 		if ($v == '' && $cformsSettings['form'.$no]['cforms'.$no.'_emptyoff'])
 			continue;
@@ -182,9 +182,9 @@ function formatEmail($track,$no){
 		$hv = htmlspecialchars($v);
 
 		### checkboxes get a symbol for value
-	 	if ( $v == '(x)' ) 
+	 	if ( $v == '(x)' )
 			$hv = "<strong>&#10004;</strong>";
-			
+
 		###  CRs for textareas \r\n user input hardcoded!
 		if ( strpos($v,"\n")!==false ) {
 	        $k = $eol . $k;
@@ -217,12 +217,12 @@ function write_tracking_record($no,$field_email,$c=''){
 		db('WRITING TRACKING RECORD');
 		$noTracking = $cformsSettings['form'.$no]['cforms'.$no.'_notracking'];
 		$mpSession = ($cformsSettings['form'.$no]['cforms'.$no.'_mp']['mp_form'] && $cformsSettings['form'.$no]['cforms'.$no.'_mp']['mp_email']);
-		
+
         if ( $noTracking || $mpSession ){
 			db("....bailing out: noTracking=$noTracking, mpSession=$mpSession\n");
 			return -1; ### bail out
 		}
-		
+
 		if ( $cformsSettings['global']['cforms_database'] == '1' ) {
 
         	### first process fields, perhaps need to bail out
@@ -280,44 +280,44 @@ function write_tracking_record($no,$field_email,$c=''){
 ### move uploaded files to local dir
 function cf_move_files($trackf, $no, $subID){
 	global $cformsSettings,$file;
-	
+
     $temp = explode( '$#$',stripslashes(htmlspecialchars($cformsSettings['form'.$no]['cforms'.$no.'_upload_dir'])) );
     $fileuploaddir = $temp[0];
-	
+
 	$inSession = (strpos($subID,'xx') !== false);
 	//if( !$inSession )
 		$subID_ = ($cformsSettings['form'.$no]['cforms'.$no.'_noid']) ? '' : $subID.'-';
 
     $file2 = $file;
   	$i=0;
-	
+
 	$_SESSION['cforms']['upload'][$no]['doAttach'] = !($cformsSettings['form'.$no]['cforms'.$no.'_noattachments']);
 
 	### debug
 	db("... in session=$inSession, moving files on form $no, tracking ID=$subID_");
-	
+
   	if ( is_array($file2) && isset($file2[tmp_name]) ) {
   		foreach( $file2[tmp_name] as $tmpfile ) {
-		
+
             ### copy attachment to local server dir
             if ( is_uploaded_file($tmpfile) ){
 
 				$fileInfoArr = array('name'=>str_replace(' ','_',$file2['name'][$i]),'path'=>$fileuploaddir, 'subID'=>$subID);
-				
+
 				if ( function_exists('my_cforms_logic') ){
 					$fileInfoArr = my_cforms_logic( $trackf, $fileInfoArr, 'fileDestination');
 				}
-				
+
 				if( ! array_key_exists('modified', $fileInfoArr) )
-					$fileInfoArr['name'] = $subID_ . $fileInfoArr['name'];				
-					
+					$fileInfoArr['name'] = $subID_ . $fileInfoArr['name'];
+
 				$destfile = $fileInfoArr['path'].'/'.$fileInfoArr['name'];
-				
+
             	move_uploaded_file($tmpfile,$destfile );
 
 				### debug
 				db("   $tmpfile -> $destfile");
-      			
+
 				$file[tmp_name][$i] = $destfile;
 
 				if( $inSession )
@@ -394,16 +394,16 @@ function check_post_vars($fv){
 function check_default_vars($m,$no) {
 		global $subID, $Ajaxpid, $AjaxURL, $post, $wpdb, $wp_db_version, $cformsSettings;
 
-	    $eol = ($cformsSettings['global']['cforms_crlf'][b]!=1)?"\r\n":"\n";
+	    $eol = ( $cformsSettings['global']['cforms_crlf']['b'] != 1 ) ? "\r\n" : "\n";
 
-		if ( $_POST['comment_post_ID'.$no] )
+		if ( isset($_POST['comment_post_ID'.$no]) && $_POST['comment_post_ID'.$no] )
 			$pid = $_POST['comment_post_ID'.$no];
 		else if ( $Ajaxpid<>'' )
 			$pid = $Ajaxpid;
 		else if ( function_exists('get_the_ID') )
 			$pid = get_the_ID();
 
-		if ( $_POST['cforms_pl'.$no] )
+		if ( isset($_POST['cforms_pl'.$no]) && $_POST['cforms_pl'.$no] )
 			$permalink = $_POST['cforms_pl'.$no];
 		else if ( $Ajaxpid<>'' )
 			$permalink = $AjaxURL;
@@ -463,9 +463,9 @@ function check_default_vars($m,$no) {
 
 ### look for custom variables
 function check_cust_vars($m,$t,$no,$html=false) {
-	
+
 	global $cformsSettings;
-    $eol = ($cformsSettings['global']['cforms_crlf'][b]!=1)?"\r\n":"\n";
+    $eol = ( $cformsSettings['global']['cforms_crlf']['b'] != 1 ) ? "\r\n" : "\n";
 
 	preg_match_all('/\\{([^\\{]+)\\}/',$m,$findall);
 	if ( count($findall[1]) > 0 ) {
@@ -490,16 +490,16 @@ function check_cust_vars($m,$t,$no,$html=false) {
 
 			### check if label name is tracked...
 			if( in_array( $fTrackedVar,$allvars ) ){
-				
+
 				$v = stripslashes($t[$fTrackedVar]);
-				
+
 				###  CRs for textareas \r\n user input hardcoded!
 				if ( $html && strpos($v,"\n")!==false )
 					$v = str_replace("\n",'<br />'.$eol,$v);
-				
+
 				$m = str_replace('{'.$fvar.'}', $v, $m);
 			}
-			
+
 		}
 	}
 	return $m;
@@ -526,12 +526,15 @@ endif;
 
 
 class cformsRSS {
-	function vars($public_query_vars) {
+
+	public static function vars($public_query_vars)
+	{
         $public_query_vars[] = 'cformsRSS';
         return $public_query_vars;
     }
 
-	function outputRSS() {
+	public static function outputRSS()
+	{
 		global $wpdb, $cformsSettings, $plugindir;
 		$temp=get_query_var('cformsRSS');
 		if( $temp <> '' ) {
@@ -626,7 +629,7 @@ global $cfdata, $cfsort, $cfsortdir;
 
 function get_cforms_entries($fname=false,$from=false,$to=false,$s=false,$limit=false,$sd='asc') {
 	global $wpdb, $cformsSettings, $cfdataTMP, $cfsort, $cfsortdir;
-	
+
 	//unify
 	if( $s=='date' || $s=='timestamp' )
 		$s = 'sub_date';
@@ -634,7 +637,7 @@ function get_cforms_entries($fname=false,$from=false,$to=false,$s=false,$limit=f
 	//set limit
     $limit = ($limit && $limit<>'')?'LIMIT 0,'.$limit:'';
 
-	
+
 	$ORDER_1 = $cfsort = '';
 	if( in_array($s,array('id','form','timestamp','email','ip')) )
 		$ORDER_1 = "ORDER BY " . $s . ' ' . $sd;
@@ -646,7 +649,7 @@ function get_cforms_entries($fname=false,$from=false,$to=false,$s=false,$limit=f
 	//SORT
 	$cfdata 	= array();
     $cfsortdir	= $sd;
-	
+
 	//GENERAL WHERE
 	$where = false;
 
@@ -664,18 +667,18 @@ function get_cforms_entries($fname=false,$from=false,$to=false,$s=false,$limit=f
 	$where .= $to?($where?' AND':'')." sub_date < '$to'":'';
     $where = $where?'WHERE'.$where:'';
 	//
-	
+
     $in = '';
 
     $sql = "SELECT *, UNIX_TIMESTAMP(sub_date) as rawdate  FROM {$wpdb->cformssubmissions} $where $ORDER_1 $limit";
 	$all = $wpdb->get_results($sql);
 
-/*	
+/*
 	echo '<br> >>'.$sql;
 	echo '<br><pre>'.print_r($all,1).'</pre>';
 	die();
 */
-	
+
 	foreach ( $all as $d ){
     	$in = $in . $d->id . ',';
 	    $n = ( $d->form_id=='' )?1:$d->form_id;
@@ -723,18 +726,18 @@ function cf_sort( $a,$b ){
 	global $cfdataTMP, $cfsort, $cfsortdir;
 
 	if (!is_array($a) && !is_array($b)){
-		
+
 		$na = ($cfdataTMP[$a]['data'][$cfsort]<>'') ? $cfdataTMP[$a]['data'][$cfsort]:false;
 		$nb = ($cfdataTMP[$b]['data'][$cfsort]<>'') ? $cfdataTMP[$b]['data'][$cfsort]:false;
-	
-		if ( !($na && $nb) ){ 
+
+		if ( !($na && $nb) ){
 			//echo "err: ($a=$naD) :: ($b=$nbD)<br>";
 			if ( !$na ) return 1;
 			if ( !$nb ) return -1;
 			return 0;
 		}
 	}
-	
+
 	//echo "($a=$na) :: ($b=$nb)<br>";
 
     $tmpA=(int)trim($na);
