@@ -45,7 +45,20 @@ require_once(dirname(__FILE__) . '/lib_functions.php');
 
 ### update 9x notice?
 $dummy = __('Please go to the <a href="%s">cforms admin page</a> and run the update process.', 'cforms');
-add_action('admin_notices', create_function('', 'global $plugindir, $cformsSettings; if (is_array($cformsSettings) && $cformsSettings[\'global\'][\'update\']) echo \'<div class="error"><p><strong>\' . sprintf( __(\'Please go to the <a href="%s">cforms admin page</a> and run the update process.\', \'cforms\') ,\'admin.php?page=\'.$plugindir.\'/cforms-global-settings.php\') . \'</strong></p></div>\';') );
+add_action('admin_notices', 'admin_update_notice' );
+function admin_update_notice()
+{
+	global $plugindir, $cformsSettings;
+
+	if ( is_array( $cformsSettings ) && isset( $cformsSettings['global']['update'] ) && $cformsSettings['global']['update'] )
+	{
+		echo '<div class="error"><p><strong>'
+		. sprintf(
+					__('Please go to the <a href="%s">cforms admin page</a> and run the update process.', 'cforms'),
+					'admin.php?page=' . $plugindir . '/cforms-global-settings.php')
+		. '</strong></p></div>';
+	}
+}
 
 
 
