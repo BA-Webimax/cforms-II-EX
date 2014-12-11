@@ -10,7 +10,7 @@ $cformsSettings['global']['cforms_root'] = get_cf_plugindir(); // . $cformsSetti
 $cformsSettings['global']['tinyURI'] = get_cf_siteurl() . '/wp-includes/js/tinymce';
 $cformsSettings['global']['cforms_root_dir'] = dirname(__FILE__);
 $cformsSettings['global']['cforms_IIS'] = strpos(dirname(__FILE__), '\\') !==false ? '\\' : '/';
-$cformsSettings['global']['v'] = $localversion;
+$cformsSettings['global']['v'] = cforms::VERSION;
 
 ### Common HTML message information
 
